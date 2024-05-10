@@ -1,10 +1,10 @@
 package steam
 
 import (
-	"github.com/Philipp15b/go-steam/v3/protocol"
-	"github.com/Philipp15b/go-steam/v3/protocol/protobuf"
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
-	"github.com/Philipp15b/go-steam/v3/steamid"
+	"github.com/Pisex/go-steam/protocol"
+	"github.com/Pisex/go-steam/protocol/protobuf"
+	"github.com/Pisex/go-steam/protocol/steamlang"
+	"github.com/Pisex/go-steam/steamid"
 	"google.golang.org/protobuf/proto"
 )
 

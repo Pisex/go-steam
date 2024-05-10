@@ -3,10 +3,10 @@ package steam
 import (
 	"bytes"
 
-	"github.com/Philipp15b/go-steam/v3/protocol"
-	"github.com/Philipp15b/go-steam/v3/protocol/gamecoordinator"
-	"github.com/Philipp15b/go-steam/v3/protocol/protobuf"
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
+	"github.com/Pisex/go-steam/protocol"
+	"github.com/Pisex/go-steam/protocol/gamecoordinator"
+	"github.com/Pisex/go-steam/protocol/protobuf"
+	"github.com/Pisex/go-steam/protocol/steamlang"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -77,4 +77,22 @@ func (g *GameCoordinator) SetGamesPlayed(appIds ...uint64) {
 	g.client.Write(protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientGamesPlayed, &protobuf.CMsgClientGamesPlayed{
 		GamesPlayed: games,
 	}))
+}
+
+func (g *GameCoordinator) GetFreeLicense(appid uint32) {
+	g.client.Write(protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientRequestFreeLicense, &protobuf.CMsgClientRequestFreeLicense{
+		Appids: []uint32{appid},
+	}))
+}
+
+func (g *GameCoordinator) PlayGame() {
+	builder := new(protobuf.CMsgClientGamesPlayed)
+  
+	game := new(protobuf.CMsgClientGamesPlayed_GamePlayed)
+	game.GameId = proto.Uint64(252490)
+	var gameArr []*protobuf.CMsgClientGamesPlayed_GamePlayed
+	gameArr = append(gameArr, game)
+  
+	builder.GamesPlayed = gameArr
+	g.client.Write(protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientGamesPlayed, builder))
 }

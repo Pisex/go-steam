@@ -5,10 +5,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Philipp15b/go-steam/v3/protocol"
-	"github.com/Philipp15b/go-steam/v3/protocol/protobuf"
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
-	"github.com/Philipp15b/go-steam/v3/steamid"
+	"github.com/Pisex/go-steam/protocol"
+	"github.com/Pisex/go-steam/protocol/protobuf"
+	"github.com/Pisex/go-steam/protocol/steamlang"
+	"github.com/Pisex/go-steam/steamid"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -108,17 +108,17 @@ func (a *Auth) handleLogOnResponse(packet *protocol.Packet) {
 
 	result := steamlang.EResult(body.GetEresult())
 	if result == steamlang.EResult_OK {
+		a.client.connectTime = time.Unix(int64(body.GetRtime32ServerTime()), 0)
 		atomic.StoreInt32(&a.client.sessionId, msg.Header.Proto.GetClientSessionid())
 		atomic.StoreUint64(&a.client.steamId, msg.Header.Proto.GetSteamid())
-		a.client.Web.webLoginKey = *body.WebapiAuthenticateUserNonce
+		atomic.StoreUint32(&a.client.publicIp, body.GetPublicIp().GetV4())
 
-		go a.client.heartbeatLoop(time.Duration(body.GetOutOfGameHeartbeatSeconds()))
+		go a.client.heartbeatLoop(time.Duration(body.GetLegacyOutOfGameHeartbeatSeconds()))
 
 		a.client.Emit(&LoggedOnEvent{
 			Result:                    steamlang.EResult(body.GetEresult()),
 			ExtendedResult:            steamlang.EResult(body.GetEresultExtended()),
-			OutOfGameSecsPerHeartbeat: body.GetOutOfGameHeartbeatSeconds(),
-			InGameSecsPerHeartbeat:    body.GetInGameHeartbeatSeconds(),
+			OutOfGameSecsPerHeartbeat: body.GetLegacyOutOfGameHeartbeatSeconds(),
 			PublicIp:                  body.GetDeprecatedPublicIp(),
 			ServerTime:                body.GetRtime32ServerTime(),
 			AccountFlags:              steamlang.EAccountFlags(body.GetAccountFlags()),
@@ -128,7 +128,6 @@ func (a *Auth) handleLogOnResponse(packet *protocol.Packet) {
 			CellIdPingThreshold:       body.GetCellIdPingThreshold(),
 			Steam2Ticket:              body.GetSteam2Ticket(),
 			UsePics:                   body.GetDeprecatedUsePics(),
-			WebApiUserNonce:           body.GetWebapiAuthenticateUserNonce(),
 			IpCountryCode:             body.GetIpCountryCode(),
 			VanityUrl:                 body.GetVanityUrl(),
 			NumLoginFailuresToMigrate: body.GetCountLoginfailuresToMigrate(),

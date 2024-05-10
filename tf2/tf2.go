@@ -5,9 +5,9 @@ package tf2
 
 import (
 	"github.com/Philipp15b/go-steam/v3"
-	"github.com/Philipp15b/go-steam/v3/protocol/gamecoordinator"
-	"github.com/Philipp15b/go-steam/v3/tf2/protocol"
-	"github.com/Philipp15b/go-steam/v3/tf2/protocol/protobuf"
+	"github.com/Pisex/go-steam/protocol/gamecoordinator"
+	"github.com/Pisex/go-steam/tf2/protocol"
+	"github.com/Pisex/go-steam/tf2/protocol/protobuf"
 )
 
 const AppId = 440

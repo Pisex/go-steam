@@ -17,7 +17,7 @@ You can also find a running example in the `gsbot` package.
 		"log"
 
 		"github.com/Philipp15b/go-steam/v3"
-		"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
+		"github.com/Pisex/go-steam/protocol/steamlang"
 	)
 
 	func main() {

@@ -8,14 +8,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Philipp15b/go-steam/v3/netutil"
+	"github.com/Pisex/go-steam/netutil"
 )
 
 // Load initial server list from Steam Directory Web API.
 // Call InitializeSteamDirectory() before Connect() to use
 // steam directory server list instead of static one.
-func InitializeSteamDirectory() error {
-	return steamDirectoryCache.Initialize()
+func InitializeSteamDirectory(cellId uint32) error {
+	return steamDirectoryCache.Initialize(cellId)
 }
 
 var steamDirectoryCache *steamDirectory = &steamDirectory{}
@@ -27,11 +27,11 @@ type steamDirectory struct {
 }
 
 // Get server list from steam directory and save it for later
-func (sd *steamDirectory) Initialize() error {
+func (sd *steamDirectory) Initialize(cellId uint32) error {
 	sd.Lock()
 	defer sd.Unlock()
 	client := new(http.Client)
-	resp, err := client.Get(fmt.Sprintf("https://api.steampowered.com/ISteamDirectory/GetCMList/v1/?cellId=0"))
+	resp, err := client.Get(fmt.Sprintf("https://api.steampowered.com/ISteamDirectory/GetCMList/v1/?cellId=", cellId))
 	if err != nil {
 		return err
 	}

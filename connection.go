@@ -9,8 +9,8 @@ import (
 	"net"
 	"sync"
 
-	"github.com/Philipp15b/go-steam/v3/cryptoutil"
-	"github.com/Philipp15b/go-steam/v3/protocol"
+	"github.com/Pisex/go-steam/cryptoutil"
+	"github.com/Pisex/go-steam/protocol"
 )
 
 type connection interface {
@@ -29,7 +29,13 @@ type tcpConnection struct {
 	cipherMutex sync.RWMutex
 }
 
-func dialTCP(laddr, raddr *net.TCPAddr) (*tcpConnection, error) {
+type ProxyConnection struct {
+	Addr     string
+	Username string
+	Password string
+}
+
+func dialTCP(laddr, raddr *net.TCPAddr, p *ProxyConnection) (*tcpConnection, error) {
 	conn, err := net.DialTCP("tcp", laddr, raddr)
 	if err != nil {
 		return nil, err

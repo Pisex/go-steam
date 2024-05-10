@@ -3,8 +3,8 @@ package protocol
 import (
 	"io"
 
-	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
-	"github.com/Philipp15b/go-steam/v3/steamid"
+	"github.com/Pisex/go-steam/protocol/steamlang"
+	"github.com/Pisex/go-steam/steamid"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -83,6 +83,22 @@ func (c *ClientMsgProtobuf) GetSourceJobId() JobId {
 
 func (c *ClientMsgProtobuf) SetSourceJobId(job JobId) {
 	c.Header.Proto.JobidSource = proto.Uint64(uint64(job))
+}
+
+func (c *ClientMsgProtobuf) SetRealm(realm uint32) {
+	c.Header.Proto.Realm = proto.Uint32(realm)
+}
+
+func (c *ClientMsgProtobuf) GetRealm() uint32 {
+	return c.Header.Proto.GetRealm()
+}
+
+func (c *ClientMsgProtobuf) SetTargetJobName(name string) {
+	c.Header.Proto.TargetJobName = proto.String(name)
+}
+
+func (c *ClientMsgProtobuf) GetTargetJobName() string {
+	return c.Header.Proto.GetTargetJobName()
 }
 
 func (c *ClientMsgProtobuf) Serialize(w io.Writer) error {
